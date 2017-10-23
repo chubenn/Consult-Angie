@@ -8,6 +8,7 @@ library(janitor)
 library(DescTools)
 library(ez)
 library(ggplot2)
+library(lsr)
 options(scipen=9)
 options(contrasts=c("contr.helmert",  "contr.poly")) 
 
@@ -229,7 +230,26 @@ lines +stat_summary(fun.y = mean, geom="line")
 
 #for means
 tapply(angie_gathered$mpca_score, list(angie_gathered$dv_mpca_long,angie_gathered$iv_groups),mean)
+tapply(angie_gathered$eipses_score, list(angie_gathered$dv_eipses_long,angie_gathered$iv_groups),mean)
+tapply(angie_gathered$psisf_score, list(angie_gathered$dv_psisf_long,angie_gathered$iv_groups),mean)
+tapply(angie_gathered$airs_score, list(angie_gathered$dv_airs_long,angie_gathered$iv_groups),mean)
+
 tapply(angie_gathered$mpca_score, list(angie_gathered$dv_mpca_long,angie_gathered$iv_groups),sd)
+
+tapply(angie_gathered$mpca_score, angie_gathered$dv_mpca_long ,mean)
+tapply(angie_gathered$mpca_score, angie_gathered$dv_mpca_long ,sd)
+
+table(angie_gathered$iv_time)
+
+with(angie_gathered, tapply(mpca_score, dv_mpca_long,mean))
+with(angie_gathered, tapply(eipses_score, dv_eipses_long,mean))
+with(angie_gathered, tapply(psisf_score, dv_psisf_long,mean))
+with(angie_gathered, tapply(airs_score, dv_airs_long,mean))
+
+with(angie_gathered, tapply(mpca_score, iv_groups,mean))
+with(angie_gathered, tapply(eipses_score, iv_groups,mean))
+with(angie_gathered, tapply(psisf_score, iv_groups,mean))
+with(angie_gathered, tapply(airs_score, iv_groups,mean))
 
 #MPCAG
 ezANOVA(data = angie_gathered, dv =. (mpcag_score), wid=. (id), within=.(dv_mpcag_long), 
@@ -297,7 +317,7 @@ tapply(angie_gathered$psisf_score, angie_gathered$iv_sbcgroup,sd)
 table(angie_gathered$iv_sbcgroup)
 
 #t-tests groups
-angie_thesis <- angie_thesis %>%
+angie_thesis <- angie_gathered1 %>%
   mutate(
     dv_mpca_all = (dv_mpca + dv_mpca_2 + dv_mpca_3)/3,
     dv_mpcag_all = (dv_mpcag + dv_mpcag_2 + dv_mpcag_3)/3,
@@ -353,3 +373,26 @@ t.test(dv_mpcag_all~iv_groups, data = t.graduated_treat_as_use)
 t.test(dv_eipses_all~iv_groups, data = t.graduated_treat_as_use)
 t.test(dv_psisf_all~iv_groups, data = t.graduated_treat_as_use)
 t.test(dv_airs_all~iv_groups, data = t.graduated_treat_as_use)
+
+eslaovmpca <- aov(angie_gathered$dv_mpca~angie_gathered$iv_language)
+summary(eslaovmpca)
+
+eslaoveipses <- aov(na.omit(angie_gathered$dv_eipses)~na.omit(angie_thesis$iv_language))
+summary(eslaoveipses)
+eslaovpsisf <- aov(angie_thesis$dv_psisf~angie_thesis$iv_language)
+summary(eslaovpsisf)
+eslaovairs <- aov(angie_thesis$dv_airs~angie_thesis$iv_language)
+summary(eslaovairs)
+
+tapply(angie_thesis$dv_mpca, angie_thesis$iv_language, mean)
+tapply(angie_thesis$dv_mpca, angie_thesis$iv_language, sd)
+tapply(angie_thesis$dv_eipses, angie_thesis$iv_language, mean)
+tapply(angie_thesis$dv_eipses, angie_thesis$iv_language, sd)
+tapply(angie_thesis$dv_psisf, angie_thesis$iv_language, mean)
+tapply(angie_thesis$dv_psisf, angie_thesis$iv_language, sd)
+tapply(angie_thesis$dv_airs, angie_thesis$iv_language, mean)
+tapply(angie_thesis$dv_airs, angie_thesis$iv_language, sd)
+etaSquared(eslaovmpca)
+EtaSq()
+EtaSq()
+EtaSq()
