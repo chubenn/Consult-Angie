@@ -296,3 +296,60 @@ tapply(angie_gathered$psisf_score, angie_gathered$iv_sbcgroup,mean)
 tapply(angie_gathered$psisf_score, angie_gathered$iv_sbcgroup,sd)
 table(angie_gathered$iv_sbcgroup)
 
+#t-tests groups
+angie_thesis <- angie_thesis %>%
+  mutate(
+    dv_mpca_all = (dv_mpca + dv_mpca_2 + dv_mpca_3)/3,
+    dv_mpcag_all = (dv_mpcag + dv_mpcag_2 + dv_mpcag_3)/3,
+    dv_eipses_all = (dv_eipses + dv_eipses_2 + dv_eipses_3)/3,
+    dv_psisf_all = (dv_psisf + dv_psisf_2 + dv_psisf_3)/3,
+    dv_airs_all = (dv_airs + dv_airs_2 + dv_airs_3)/3
+  )
+t.treat_treat_as_use <- angie_thesis %>%
+  filter(iv_groups == "treatment" | iv_groups == "treatment as usual")
+t.treat_completed <- angie_thesis %>%
+  filter(iv_groups == "treatment" | iv_groups == "completed")
+t.treat_graduated <- angie_thesis %>%
+  filter(iv_groups == "treatment" | iv_groups == "graduate")
+t.completed_treat_as_use <- angie_thesis %>%
+  filter(iv_groups == "completed" | iv_groups == "treatment as usual")
+t.completed_graduated <- angie_thesis %>%
+  filter(iv_groups == "completed" | iv_groups == "graduate")
+t.graduated_treat_as_use <- angie_thesis %>%
+  filter(iv_groups == "graduate" | iv_groups == "treatment as usual")
+
+t.test(dv_mpca_all~iv_groups, data = t.treat_treat_as_use)
+t.test(dv_mpcag_all~iv_groups, data = t.treat_treat_as_use)
+t.test(dv_eipses_all~iv_groups, data = t.treat_treat_as_use)
+t.test(dv_psisf_all~iv_groups, data = t.treat_treat_as_use)
+t.test(dv_airs_all~iv_groups, data = t.treat_treat_as_use)
+
+t.test(dv_mpca_all~iv_groups, data = t.treat_completed)
+t.test(dv_mpcag~iv_groups, data = t.treat_completed)
+t.test(dv_eipses_all~iv_groups, data = t.treat_completed)
+t.test(dv_psisf_all~iv_groups, data = t.treat_completed)
+t.test(dv_airs_all~iv_groups, data = t.treat_completed)
+
+t.test(dv_mpca_all~iv_groups, data = t.treat_graduated)
+t.test(dv_mpcag_all~iv_groups, data = t.treat_graduated)
+t.test(dv_eipses_all~iv_groups, data = t.treat_graduated)
+t.test(dv_psisf_all~iv_groups, data = t.treat_graduated)
+t.test(dv_airs_all~iv_groups, data = t.treat_graduated)
+
+t.test(dv_mpca_all~iv_groups, data = t.completed_treat_as_use)
+t.test(dv_mpcag_all~iv_groups, data = t.completed_treat_as_use)
+t.test(dv_eipses_all~iv_groups, data = t.completed_treat_as_use)
+t.test(dv_psisf_all~iv_groups, data = t.completed_treat_as_use)
+t.test(dv_airs_all~iv_groups, data = t.completed_treat_as_use)
+
+t.test(dv_mpca_all~iv_groups, data = t.completed_graduated)
+t.test(dv_mpcag_all~iv_groups, data = t.completed_graduated)
+t.test(dv_eipses_all~iv_groups, data = t.completed_graduated)
+t.test(dv_psisf_all~iv_groups, data = t.completed_graduated)
+t.test(dv_airs_all~iv_groups, data = t.completed_graduated)
+
+t.test(dv_mpca_all~iv_groups, data = t.graduated_treat_as_use)
+t.test(dv_mpcag_all~iv_groups, data = t.graduated_treat_as_use)
+t.test(dv_eipses_all~iv_groups, data = t.graduated_treat_as_use)
+t.test(dv_psisf_all~iv_groups, data = t.graduated_treat_as_use)
+t.test(dv_airs_all~iv_groups, data = t.graduated_treat_as_use)
