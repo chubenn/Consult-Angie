@@ -137,15 +137,35 @@ angie_complete <- final_angie_dat %>%
          iv_curr_bt  =   ifelse(childrecbt == 1, "yes","no"),
          iv_curr_ot  =   ifelse(childrecot == 1, "yes","no"),
          iv_curr_pt  =   ifelse(childrecpt == 1, "yes","no"),
-         iv_curr_sb  =   ifelse(childrecsb == 1, "yes","no"))
+         iv_curr_sb  =   ifelse(childrecsb == 1, "yes","no"),
+         iv_income   =   anninc)
 
-angie_thesis <- angie_complete1 %>%
+angie_thesis <- angie_complete %>%
   select(dv_mpca, dv_mpcag, dv_eipses, dv_psisf, dv_airs,
          dv_mpca_2, dv_mpcag_2, dv_eipses_2, dv_psisf_2, dv_airs_2,
          dv_mpca_3, dv_mpcag_3, dv_eipses_3, dv_psisf_3, dv_airs_3,
          iv_time, iv_groups, iv_sbcgroup, iv_teacher, iv_language, iv_impserv,
          id, iv_ever_st, iv_ever_bt, iv_ever_ot, iv_ever_pt, iv_ever_sb,
-         iv_curr_st, iv_curr_bt, iv_curr_ot, iv_curr_pt, iv_curr_sb)
+         iv_curr_st, iv_curr_bt, iv_curr_ot, iv_curr_pt, iv_curr_sb,iv_income)
+
+#income
+mean(na.omit(angie_thesis$iv_income))
+angie_income_unclean <- angie_thesis %>% filter(iv_income < 200000)
+mean(na.omit(angie_income_t$iv_income))
+angie_income_t <- angie_income_unclean %>%
+  mutate (income_cat = ifelse(iv_income > 40000, "high","low"),
+          dv_mpca_all = (dv_mpca + dv_mpca_2 + dv_mpca_3)/3,
+          dv_mpcag_all = (dv_mpcag + dv_mpcag_2 + dv_mpcag_3)/3,
+          dv_eipses_all = (dv_eipses + dv_eipses_2 + dv_eipses_3)/3,
+          dv_psisf_all = (dv_psisf + dv_psisf_2 + dv_psisf_3)/3,
+          dv_airs_all = (dv_airs + dv_airs_2 + dv_airs_3)/3)
+
+t.test(dv_mpca_all~income_cat, data = angie_income_t)
+t.test(dv_mpcag_all~income_cat, data = angie_income_t)
+t.test(dv_eipses_all~income_cat, data = angie_income_t)
+t.test(dv_psisf_all~income_cat, data = angie_income_t)
+t.test(dv_airs_all~income_cat, data = angie_income_t)
+
 
 lapply(angie_thesis[1:15],Skew,method = 2, conf.level =.99)   
 lapply(angie_thesis[1:15],Kurt, method = 2, conf.level = .99)
@@ -206,7 +226,7 @@ angie_test4 = angie_thesis %>%
   select(dv_airs,dv_airs_2,dv_airs_3) %>%
   gather(dv_airs,dv_airs_2,dv_airs_3, key = "dv_airs_long", value = "airs_score")
 
-angie_othercat = angie_thesis[,16:32]
+angie_othercat = angie_thesis[,16:33]
 
 angie_cbind = cbind(angie_test1,angie_test2,angie_test3,angie_test4,angie_test5,angie_othercat)
 
@@ -317,7 +337,7 @@ tapply(angie_gathered$psisf_score, angie_gathered$iv_sbcgroup,sd)
 table(angie_gathered$iv_sbcgroup)
 
 #t-tests groups
-angie_thesis <- angie_gathered1 %>%
+angie_thesis <- angie_gathered %>%
   mutate(
     dv_mpca_all = (dv_mpca + dv_mpca_2 + dv_mpca_3)/3,
     dv_mpcag_all = (dv_mpcag + dv_mpcag_2 + dv_mpcag_3)/3,
@@ -325,6 +345,7 @@ angie_thesis <- angie_gathered1 %>%
     dv_psisf_all = (dv_psisf + dv_psisf_2 + dv_psisf_3)/3,
     dv_airs_all = (dv_airs + dv_airs_2 + dv_airs_3)/3
   )
+
 t.treat_treat_as_use <- angie_thesis %>%
   filter(iv_groups == "treatment" | iv_groups == "treatment as usual")
 t.treat_completed <- angie_thesis %>%
