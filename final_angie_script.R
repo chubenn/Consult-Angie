@@ -136,15 +136,16 @@ angie_complete <- final_angie_dat %>%
          iv_curr_bt  =   ifelse(childrecbt == 1, "yes","no"),
          iv_curr_ot  =   ifelse(childrecot == 1, "yes","no"),
          iv_curr_pt  =   ifelse(childrecpt == 1, "yes","no"),
-         iv_curr_sb  =   ifelse(childrecsb == 1, "yes","no"))
+         iv_curr_sb  =   ifelse(childrecsb == 1, "yes","no"),
+         iv_lang.2   =   ifelse(lang == 1, "english","no interpret"))
 
-angie_thesis <- angie_complete1 %>%
+angie_thesis <- angie_complete %>%
   select(dv_mpca, dv_mpcag, dv_eipses, dv_psisf, dv_airs,
          dv_mpca_2, dv_mpcag_2, dv_eipses_2, dv_psisf_2, dv_airs_2,
          dv_mpca_3, dv_mpcag_3, dv_eipses_3, dv_psisf_3, dv_airs_3,
          iv_time, iv_groups, iv_sbcgroup, iv_teacher, iv_language, iv_impserv,
          id, iv_ever_st, iv_ever_bt, iv_ever_ot, iv_ever_pt, iv_ever_sb,
-         iv_curr_st, iv_curr_bt, iv_curr_ot, iv_curr_pt, iv_curr_sb)
+         iv_curr_st, iv_curr_bt, iv_curr_ot, iv_curr_pt, iv_curr_sb, iv_lang.2)
 
 lapply(angie_thesis[1:15],Skew,method = 2, conf.level =.99)   
 lapply(angie_thesis[1:15],Kurt, method = 2, conf.level = .99)
@@ -353,3 +354,51 @@ t.test(dv_mpcag_all~iv_groups, data = t.graduated_treat_as_use)
 t.test(dv_eipses_all~iv_groups, data = t.graduated_treat_as_use)
 t.test(dv_psisf_all~iv_groups, data = t.graduated_treat_as_use)
 t.test(dv_airs_all~iv_groups, data = t.graduated_treat_as_use)
+
+####updated
+##t.tests for esl/none
+t.test(dv_mpca_all~iv_lang.2, data = angie_thesis)
+cohensD(dv_mpca_all ~ iv_lang.2,dat = angie_thesis)
+tapply(angie_thesis$dv_mpca_all,angie_thesis$iv_lang.2, describe)
+
+t.test(dv_mpcag_all~iv_lang.2, data = angie_thesis)
+cohensD(dv_mpcag_all ~ iv_lang.2,dat = angie_thesis)
+tapply(angie_thesis$dv_mpcag_all,angie_thesis$iv_lang.2, describe)
+
+
+t.test(dv_eipses_all~iv_lang.2, data = angie_thesis)
+cohensD(dv_eipses_all ~ iv_lang.2,dat = angie_thesis)
+tapply(angie_thesis$dv_eipses_all,angie_thesis$iv_lang.2, describe)
+
+
+t.test(dv_psisf_all~iv_lang.2, data = angie_thesis)
+cohensD(dv_psisf_all ~ iv_lang.2,dat = angie_thesis)
+tapply(angie_thesis$dv_psisf_all,angie_thesis$iv_lang.2, describe)
+
+t.test(dv_airs_all~iv_lang.2, data = angie_thesis)
+cohensD(dv_airs_all ~ iv_lang.2,dat = angie_thesis)
+tapply(angie_thesis$dv_airs_all,angie_thesis$iv_lang.2, describe)
+
+#### correlation matrix
+cor.matrix <- angie_thesis %>%
+  select(dv_mpca_all, dv_mpcag_all, dv_eipses_all,dv_psisf_all,dv_airs_all)
+Hmisc::rcorr(as.matrix(cor.matrix))
+
+
+###whose all missing?
+mean(is.na(amg_clean$MPCA1))
+sum(is.na(amg_clean$MPCA1))
+mean(is.na(amg_clean$`MPCA1#2`))
+sum(is.na(amg_clean$`MPCA1#2`))
+mean(is.na(amg_clean$`MPCA1#3`))
+sum(is.na(amg_clean$`MPCA1#3`))
+
+###descriptive statistics?
+describe(amg_clean$AnnInc)
+describe(amg_clean$PA)
+describe(amg_clean$CA)
+
+describe(angie_thesis$dv_mpca_all)
+describe(angie_thesis$dv_psisf_all)
+describe(angie_thesis$dv_eipses_all)
+describe(angie_thesis$dv_airs_all)
