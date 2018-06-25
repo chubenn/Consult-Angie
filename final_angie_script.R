@@ -206,7 +206,6 @@ angie_test4 = angie_thesis %>%
   select(dv_airs,dv_airs_2,dv_airs_3) %>%
   gather(dv_airs,dv_airs_2,dv_airs_3, key = "dv_airs_long", value = "airs_score")
 
-angie_othercat = angie_thesis[,16:32]
 
 angie_cbind = cbind(angie_test1,angie_test2,angie_test3,angie_test4,angie_test5,angie_othercat)
 
@@ -230,7 +229,26 @@ lines +stat_summary(fun.y = mean, geom="line")
 
 #for means
 tapply(angie_gathered$mpca_score, list(angie_gathered$dv_mpca_long,angie_gathered$iv_groups),mean)
+tapply(angie_gathered$eipses_score, list(angie_gathered$dv_eipses_long,angie_gathered$iv_groups),mean)
+tapply(angie_gathered$psisf_score, list(angie_gathered$dv_psisf_long,angie_gathered$iv_groups),mean)
+tapply(angie_gathered$airs_score, list(angie_gathered$dv_airs_long,angie_gathered$iv_groups),mean)
+
 tapply(angie_gathered$mpca_score, list(angie_gathered$dv_mpca_long,angie_gathered$iv_groups),sd)
+
+tapply(angie_gathered$mpca_score, angie_gathered$dv_mpca_long ,mean)
+tapply(angie_gathered$mpca_score, angie_gathered$dv_mpca_long ,sd)
+
+table(angie_gathered$iv_time)
+
+with(angie_gathered, tapply(mpca_score, dv_mpca_long,mean))
+with(angie_gathered, tapply(eipses_score, dv_eipses_long,mean))
+with(angie_gathered, tapply(psisf_score, dv_psisf_long,mean))
+with(angie_gathered, tapply(airs_score, dv_airs_long,mean))
+
+with(angie_gathered, tapply(mpca_score, iv_groups,mean))
+with(angie_gathered, tapply(eipses_score, iv_groups,mean))
+with(angie_gathered, tapply(psisf_score, iv_groups,mean))
+with(angie_gathered, tapply(airs_score, iv_groups,mean))
 
 #MPCAG
 ezANOVA(data = angie_gathered, dv =. (mpcag_score), wid=. (id), within=.(dv_mpcag_long), 
@@ -298,7 +316,6 @@ tapply(angie_gathered$psisf_score, angie_gathered$iv_sbcgroup,sd)
 table(angie_gathered$iv_sbcgroup)
 
 #t-tests groups
-angie_thesis <- angie_thesis %>%
   mutate(
     dv_mpca_all = (dv_mpca + dv_mpca_2 + dv_mpca_3)/3,
     dv_mpcag_all = (dv_mpcag + dv_mpcag_2 + dv_mpcag_3)/3,
